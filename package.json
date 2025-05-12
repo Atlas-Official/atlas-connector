@@ -1,0 +1,22 @@
+{
+  "name": "atlas-collector",
+  "version": "1.0.0",
+  "description": "User interaction tracking library",
+  "main": "dist/php/logCollector.js",
+  "scripts": {
+    "build": "pnpm tsc --removeComments && pnpm minify",
+    "watch": "pnpm tsc --watch",
+    "minify": "terser dist/php/logCollector.js -o dist/php/logCollector.min.js --compress --mangle"
+  },
+  "keywords": [
+    "analytics",
+    "tracking",
+    "logging"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "terser": "^5.39.0",
+    "typescript": "^5.0.0"
+  }
+}

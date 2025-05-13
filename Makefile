@@ -2,4 +2,4 @@ init:
 	pnpm i
 
 build:
-	pnpm run build
+	pnpm run build:min

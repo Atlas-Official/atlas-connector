@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "target": "ES5",
-    "module": "NONE",
-    "outFile": "./dist/php/logCollector.js",
+    "target": "es2017",
+    "module": "esnext",
+    // "outFile": "./dist/php/logCollector.js",
     "rootDir": "./src",
     "strict": true,
     "removeComments": true,

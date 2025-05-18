@@ -28,10 +28,13 @@ export class LogCollector {
   private sessionStartTime: number = Date.now();
   private viewCount: number = 0;
   private actionCount: number = 0;
+  private willSendSessionStart: boolean = true;
 
   constructor(options: LogCollectorOptions = {}) {
     this.endpoint = options.endpoint || "/api/logs";
     this.clientToken = options.clientToken || "";
+    this.willSendSessionStart =
+      window.sessionStorage.getItem("log_session_id") === null;
     this.sessionId = getOrCreateSessionId();
   }
 
@@ -40,7 +43,9 @@ export class LogCollector {
     this.initialized = true;
 
     // Send initial session start event
-    this.trackSessionStart();
+    if (this.willSendSessionStart) {
+      this.trackSessionStart();
+    }
 
     // Setup event handlers
     attachEventHandlers(this);

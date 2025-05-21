@@ -2,11 +2,11 @@
   "name": "atlas-collector",
   "version": "1.0.0",
   "description": "User interaction tracking library",
-  "main": "dist/php/logCollector.min.js",
+  "main": "dist/php/logCollectorPHP.min.js",
   "scripts": {
-    "build": "pnpm lint && npx esbuild src/php/index.ts --bundle --outfile=dist/php/logCollector.iife.js --format=iife --global-name=LogCollector --target=es2017",
-    "build:min": "pnpm lint && npx esbuild src/php/index.ts --bundle --outfile=dist/php/logCollector.min.js --format=iife --global-name=LogCollector --target=es2017 --minify",
-    "watch": "npx esbuild src/php/index.ts --bundle --outfile=dist/php/logCollector.iife.js --format=iife --global-name=LogCollector --target=es2017 --watch",
+    "build": "pnpm lint && npx esbuild src/php/index.ts --bundle --outfile=dist/php/logCollectorPHP.iife.js --format=iife --global-name=LogCollectorPHP --target=es2017",
+    "build:min": "pnpm lint && npx esbuild src/php/index.ts --bundle --outfile=dist/php/logCollectorPHP.min.js --format=iife --global-name=LogCollectorPHP --target=es2017 --minify",
+    "watch": "npx esbuild src/php/index.ts --bundle --outfile=dist/php/logCollectorPHP.iife.js --format=iife --global-name=LogCollectorPHP --target=es2017 --watch",
     "lint": "eslint ."
   },
   "keywords": [

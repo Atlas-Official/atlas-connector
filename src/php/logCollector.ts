@@ -195,6 +195,6 @@ export class LogCollector {
   public destroy(): void {
     // Track end events before destroying
     this.trackPageViewEnd();
-    this.trackSessionEnd();
+    // this.trackSessionEnd();
   }
 }

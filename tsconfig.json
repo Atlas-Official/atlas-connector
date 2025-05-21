@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "es2017",
+    "module": "esnext",
+    // "outFile": "./dist/php/logCollector.js",
+    "rootDir": "./src",
+    "strict": true,
+    "removeComments": true,
+    "sourceMap": false,
+    "declaration": false,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "lib": ["DOM", "ES2015", "ES2016", "ES2017"]
+  },
+  "include": ["src/php/**/*"],
+  "exclude": ["node_modules", "**/*.test.ts"]
+}

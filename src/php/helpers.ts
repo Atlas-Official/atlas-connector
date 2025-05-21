@@ -1,0 +1,21 @@
+export function getAttributeOrThrow(
+  element: HTMLScriptElement | null,
+  attribute: string
+): string {
+  if (!element) {
+    throw new Error("Element is required");
+  }
+  const value = element.getAttribute(attribute);
+  if (!value) {
+    throw new Error(`Attribute ${attribute} is required`);
+  }
+  return value;
+}
+
+export function generateUUID(): string {
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+    const r = (Math.random() * 16) | 0;
+    const v = c === "x" ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+}

@@ -1,0 +1,22 @@
+{
+  "name": "atlas-collector",
+  "version": "1.0.0",
+  "description": "User interaction tracking library",
+  "main": "dist/php/logCollector.min.js",
+  "scripts": {
+    "build": "npx esbuild src/php/index.ts --bundle --outfile=dist/php/logCollector.iife.js --format=iife --global-name=LogCollector --target=es2017",
+    "build:min": "npx esbuild src/php/index.ts --bundle --outfile=dist/php/logCollector.min.js --format=iife --global-name=LogCollector --target=es2017 --minify",
+    "watch": "npx esbuild src/php/index.ts --bundle --outfile=dist/php/logCollector.iife.js --format=iife --global-name=LogCollector --target=es2017 --watch"
+  },
+  "keywords": [
+    "analytics",
+    "tracking",
+    "logging"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "esbuild": "^0.18.0",
+    "typescript": "^5.0.0"
+  }
+}

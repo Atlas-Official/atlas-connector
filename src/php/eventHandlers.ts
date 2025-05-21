@@ -1,4 +1,4 @@
-import { LogCollector } from "./LogCollector";
+import { LogCollector } from "./logCollector";
 
 export function attachEventHandlers(collector: LogCollector): void {
   document.addEventListener("click", (event) =>

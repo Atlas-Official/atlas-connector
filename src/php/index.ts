@@ -1,4 +1,4 @@
-import { LogCollector } from "./LogCollector";
+import { LogCollector } from "./logCollector";
 import { getAttributeOrThrow } from "./helpers";
 
 const script = document.currentScript as HTMLScriptElement | null;

@@ -1,13 +1,4 @@
-import {
-  DataType,
-  PostRequest,
-  PostRequestType,
-  SessionAttributes,
-  SessionAttributesType,
-  SessionMetrics,
-  Data,
-  Convert,
-} from "./types";
+import { DataType, PostRequest, PostRequestType, Data, Convert } from "./types";
 import { generateFingerprint, getOrCreateSessionId } from "./session";
 import { attachEventHandlers } from "./eventHandlers";
 import { generateUUID } from "./helpers";
@@ -91,18 +82,15 @@ export class LogCollector {
   }
 
   private trackSessionStart(): void {
-    const sessionAttributes: SessionAttributes = {
-      fingerprint: generateFingerprint(),
-      ip: "", // Will be filled server-side
-      isActive: true,
-      referrer: document.referrer || undefined,
-      type: SessionAttributesType.User,
-    };
-
     const data: Data = {
       id: this.sessionId,
-      attributes: sessionAttributes,
-      startTimestamp: this.sessionStartTime,
+      fingerprint: generateFingerprint(),
+      isActive: true,
+      referrer: document.referrer || undefined,
+      timestamp: this.sessionStartTime,
+      type: DataType.User,
+      userAgent: "", // Will be filled server-side
+      userOrigin: "", // Will be filled server-side
     };
 
     this.sendRequest(PostRequestType.SessionStart, data);
@@ -111,26 +99,18 @@ export class LogCollector {
   private trackSessionEnd(): void {
     const timeSpent = Date.now() - this.sessionStartTime;
 
-    const sessionAttributes: SessionAttributes = {
+    const data: Data = {
+      id: this.sessionId,
       fingerprint: generateFingerprint(),
-      ip: "", // Will be filled server-side
       isActive: false,
       referrer: document.referrer || undefined,
-      type: SessionAttributesType.User,
-    };
-
-    const sessionMetrics: SessionMetrics = {
+      timestamp: this.sessionStartTime,
+      type: DataType.User,
       actionCount: this.actionCount,
       timeSpent: timeSpent,
       viewCount: this.viewCount,
-    };
-
-    const data: Data = {
-      id: this.sessionId,
-      attributes: sessionAttributes,
-      metrics: sessionMetrics,
-      startTimestamp: this.sessionStartTime,
-      endTimestamp: Date.now(),
+      userAgent: "", // Will be filled server-side
+      userOrigin: "", // Will be filled server-side
     };
 
     this.sendRequest(PostRequestType.SessionEnd, data);
@@ -150,6 +130,8 @@ export class LogCollector {
       url: this.currentUrl,
       title: document.title || undefined,
       referrer: document.referrer || undefined,
+      userAgent: "", // Will be filled server-side
+      userOrigin: "", // Will be filled server-side
     };
 
     this.sendRequest(PostRequestType.ViewStart, data);
@@ -169,6 +151,8 @@ export class LogCollector {
       url: this.currentUrl,
       title: document.title || undefined,
       referrer: document.referrer || undefined,
+      userAgent: "", // Will be filled server-side
+      userOrigin: "", // Will be filled server-side
     };
 
     this.sendRequest(PostRequestType.ViewEnd, data);
@@ -184,6 +168,8 @@ export class LogCollector {
       timestamp: Date.now(),
       type: DataType.Click,
       target: target.id || target.tagName || undefined,
+      userAgent: "", // Will be filled server-side
+      userOrigin: "", // Will be filled server-side
     };
 
     this.sendRequest(PostRequestType.Action, data);
@@ -199,6 +185,8 @@ export class LogCollector {
       timestamp: Date.now(),
       type: DataType.FormSubmit,
       target: form.id || form.name || "unnamed_form",
+      userAgent: "", // Will be filled server-side
+      userOrigin: "", // Will be filled server-side
     };
 
     this.sendRequest(PostRequestType.Action, data);

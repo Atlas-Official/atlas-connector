@@ -1,15 +1,14 @@
 // To parse this data:
 //
-//   import { Convert, PostRequest, SessionStartRequest, SessionEndRequest, ViewStartRequest, ViewEndRequest, ActionRequest, SessionMetrics, SessionAttributes } from "./file";
+//   import { Convert, PostRequest, UserInfo, SessionStartRequest, SessionEndRequest, ViewStartRequest, ViewEndRequest, ActionRequest } from "./file";
 //
 //   const postRequest = Convert.toPostRequest(json);
+//   const userInfo = Convert.toUserInfo(json);
 //   const sessionStartRequest = Convert.toSessionStartRequest(json);
 //   const sessionEndRequest = Convert.toSessionEndRequest(json);
 //   const viewStartRequest = Convert.toViewStartRequest(json);
 //   const viewEndRequest = Convert.toViewEndRequest(json);
 //   const actionRequest = Convert.toActionRequest(json);
-//   const sessionMetrics = Convert.toSessionMetrics(json);
-//   const sessionAttributes = Convert.toSessionAttributes(json);
 //
 // These functions will throw an error if the JSON doesn't
 // match the expected interface, even if the JSON is valid.
@@ -20,44 +19,29 @@ export interface PostRequest {
 }
 
 export interface Data {
-    attributes?:     SessionAttributes;
-    id:              string;
-    startTimestamp?: number;
-    endTimestamp?:   number;
-    metrics?:        SessionMetrics;
-    path?:           string;
-    referrer?:       string;
-    sessionId?:      string;
-    title?:          string;
-    url?:            string;
-    timeSpent?:      number;
-    target?:         string;
-    timestamp?:      number;
-    type?:           DataType;
-}
-
-export interface SessionAttributes {
-    fingerprint: string;
-    ip:          string;
-    isActive:    boolean;
-    referrer?:   string;
-    type:        SessionAttributesType;
-}
-
-export enum SessionAttributesType {
-    Synthetics = "SYNTHETICS",
-    User = "USER",
-}
-
-export interface SessionMetrics {
-    actionCount: number;
-    timeSpent:   number;
-    viewCount:   number;
+    fingerprint?: string;
+    id:           string;
+    isActive?:    boolean;
+    referrer?:    string;
+    timestamp:    number;
+    type?:        DataType;
+    userAgent:    string;
+    userOrigin:   string;
+    actionCount?: number;
+    timeSpent?:   number;
+    viewCount?:   number;
+    path?:        string;
+    sessionId?:   string;
+    title?:       string;
+    url?:         string;
+    target?:      string;
 }
 
 export enum DataType {
     Click = "CLICK",
     FormSubmit = "FORM_SUBMIT",
+    Synthetics = "SYNTHETICS",
+    User = "USER",
 }
 
 export enum PostRequestType {
@@ -68,48 +52,79 @@ export enum PostRequestType {
     ViewStart = "VIEW_START",
 }
 
+export interface UserInfo {
+    userAgent:  string;
+    userOrigin: string;
+}
+
 export interface SessionStartRequest {
-    attributes:     SessionAttributes;
-    id:             string;
-    startTimestamp: number;
+    fingerprint: string;
+    id:          string;
+    isActive:    boolean;
+    referrer?:   string;
+    timestamp:   number;
+    type:        SessionStartRequestType;
+    userAgent:   string;
+    userOrigin:  string;
+}
+
+export enum SessionStartRequestType {
+    Synthetics = "SYNTHETICS",
+    User = "USER",
 }
 
 export interface SessionEndRequest {
-    attributes:     SessionAttributes;
-    endTimestamp:   number;
-    id:             string;
-    metrics:        SessionMetrics;
-    startTimestamp: number;
+    actionCount: number;
+    fingerprint: string;
+    id:          string;
+    isActive:    boolean;
+    referrer?:   string;
+    timeSpent:   number;
+    timestamp:   number;
+    type:        SessionStartRequestType;
+    userAgent:   string;
+    userOrigin:  string;
+    viewCount:   number;
 }
 
 export interface ViewStartRequest {
-    id:             string;
-    path:           string;
-    referrer?:      string;
-    sessionId:      string;
-    startTimestamp: number;
-    title?:         string;
-    url:            string;
+    id:         string;
+    path:       string;
+    referrer?:  string;
+    sessionId:  string;
+    timestamp:  number;
+    title?:     string;
+    url:        string;
+    userAgent:  string;
+    userOrigin: string;
 }
 
 export interface ViewEndRequest {
-    endTimestamp:   number;
-    id:             string;
-    path:           string;
-    referrer?:      string;
-    sessionId:      string;
-    startTimestamp: number;
-    timeSpent:      number;
-    title?:         string;
-    url:            string;
+    id:         string;
+    path:       string;
+    referrer?:  string;
+    sessionId:  string;
+    timeSpent:  number;
+    timestamp:  number;
+    title?:     string;
+    url:        string;
+    userAgent:  string;
+    userOrigin: string;
 }
 
 export interface ActionRequest {
-    id:        string;
-    sessionId: string;
-    target?:   string;
-    timestamp: number;
-    type:      DataType;
+    id:         string;
+    sessionId:  string;
+    target?:    string;
+    timestamp:  number;
+    type:       ActionRequestType;
+    userAgent:  string;
+    userOrigin: string;
+}
+
+export enum ActionRequestType {
+    Click = "CLICK",
+    FormSubmit = "FORM_SUBMIT",
 }
 
 // Converts JSON strings to/from your types
@@ -121,6 +136,14 @@ export class Convert {
 
     public static postRequestToJson(value: PostRequest): string {
         return JSON.stringify(uncast(value, r("PostRequest")), null, 2);
+    }
+
+    public static toUserInfo(json: string): UserInfo {
+        return cast(JSON.parse(json), r("UserInfo"));
+    }
+
+    public static userInfoToJson(value: UserInfo): string {
+        return JSON.stringify(uncast(value, r("UserInfo")), null, 2);
     }
 
     public static toSessionStartRequest(json: string): SessionStartRequest {
@@ -161,22 +184,6 @@ export class Convert {
 
     public static actionRequestToJson(value: ActionRequest): string {
         return JSON.stringify(uncast(value, r("ActionRequest")), null, 2);
-    }
-
-    public static toSessionMetrics(json: string): SessionMetrics {
-        return cast(JSON.parse(json), r("SessionMetrics"));
-    }
-
-    public static sessionMetricsToJson(value: SessionMetrics): string {
-        return JSON.stringify(uncast(value, r("SessionMetrics")), null, 2);
-    }
-
-    public static toSessionAttributes(json: string): SessionAttributes {
-        return cast(JSON.parse(json), r("SessionAttributes"));
-    }
-
-    public static sessionAttributesToJson(value: SessionAttributes): string {
-        return JSON.stringify(uncast(value, r("SessionAttributes")), null, 2);
     }
 }
 
@@ -338,79 +345,87 @@ const typeMap: any = {
         { json: "type", js: "type", typ: r("PostRequestType") },
     ], false),
     "Data": o([
-        { json: "attributes", js: "attributes", typ: u(undefined, r("SessionAttributes")) },
+        { json: "fingerprint", js: "fingerprint", typ: u(undefined, "") },
         { json: "id", js: "id", typ: "" },
-        { json: "startTimestamp", js: "startTimestamp", typ: u(undefined, 3.14) },
-        { json: "endTimestamp", js: "endTimestamp", typ: u(undefined, 3.14) },
-        { json: "metrics", js: "metrics", typ: u(undefined, r("SessionMetrics")) },
-        { json: "path", js: "path", typ: u(undefined, "") },
+        { json: "isActive", js: "isActive", typ: u(undefined, true) },
         { json: "referrer", js: "referrer", typ: u(undefined, "") },
+        { json: "timestamp", js: "timestamp", typ: 3.14 },
+        { json: "type", js: "type", typ: u(undefined, r("DataType")) },
+        { json: "userAgent", js: "userAgent", typ: "" },
+        { json: "userOrigin", js: "userOrigin", typ: "" },
+        { json: "actionCount", js: "actionCount", typ: u(undefined, 3.14) },
+        { json: "timeSpent", js: "timeSpent", typ: u(undefined, 3.14) },
+        { json: "viewCount", js: "viewCount", typ: u(undefined, 3.14) },
+        { json: "path", js: "path", typ: u(undefined, "") },
         { json: "sessionId", js: "sessionId", typ: u(undefined, "") },
         { json: "title", js: "title", typ: u(undefined, "") },
         { json: "url", js: "url", typ: u(undefined, "") },
-        { json: "timeSpent", js: "timeSpent", typ: u(undefined, 3.14) },
         { json: "target", js: "target", typ: u(undefined, "") },
-        { json: "timestamp", js: "timestamp", typ: u(undefined, 3.14) },
-        { json: "type", js: "type", typ: u(undefined, r("DataType")) },
     ], false),
-    "SessionAttributes": o([
-        { json: "fingerprint", js: "fingerprint", typ: "" },
-        { json: "ip", js: "ip", typ: "" },
-        { json: "isActive", js: "isActive", typ: true },
-        { json: "referrer", js: "referrer", typ: u(undefined, "") },
-        { json: "type", js: "type", typ: r("SessionAttributesType") },
-    ], false),
-    "SessionMetrics": o([
-        { json: "actionCount", js: "actionCount", typ: 3.14 },
-        { json: "timeSpent", js: "timeSpent", typ: 3.14 },
-        { json: "viewCount", js: "viewCount", typ: 3.14 },
+    "UserInfo": o([
+        { json: "userAgent", js: "userAgent", typ: "" },
+        { json: "userOrigin", js: "userOrigin", typ: "" },
     ], false),
     "SessionStartRequest": o([
-        { json: "attributes", js: "attributes", typ: r("SessionAttributes") },
+        { json: "fingerprint", js: "fingerprint", typ: "" },
         { json: "id", js: "id", typ: "" },
-        { json: "startTimestamp", js: "startTimestamp", typ: 3.14 },
+        { json: "isActive", js: "isActive", typ: true },
+        { json: "referrer", js: "referrer", typ: u(undefined, "") },
+        { json: "timestamp", js: "timestamp", typ: 3.14 },
+        { json: "type", js: "type", typ: r("SessionStartRequestType") },
+        { json: "userAgent", js: "userAgent", typ: "" },
+        { json: "userOrigin", js: "userOrigin", typ: "" },
     ], false),
     "SessionEndRequest": o([
-        { json: "attributes", js: "attributes", typ: r("SessionAttributes") },
-        { json: "endTimestamp", js: "endTimestamp", typ: 3.14 },
+        { json: "actionCount", js: "actionCount", typ: 3.14 },
+        { json: "fingerprint", js: "fingerprint", typ: "" },
         { json: "id", js: "id", typ: "" },
-        { json: "metrics", js: "metrics", typ: r("SessionMetrics") },
-        { json: "startTimestamp", js: "startTimestamp", typ: 3.14 },
+        { json: "isActive", js: "isActive", typ: true },
+        { json: "referrer", js: "referrer", typ: u(undefined, "") },
+        { json: "timeSpent", js: "timeSpent", typ: 3.14 },
+        { json: "timestamp", js: "timestamp", typ: 3.14 },
+        { json: "type", js: "type", typ: r("SessionStartRequestType") },
+        { json: "userAgent", js: "userAgent", typ: "" },
+        { json: "userOrigin", js: "userOrigin", typ: "" },
+        { json: "viewCount", js: "viewCount", typ: 3.14 },
     ], false),
     "ViewStartRequest": o([
         { json: "id", js: "id", typ: "" },
         { json: "path", js: "path", typ: "" },
         { json: "referrer", js: "referrer", typ: u(undefined, "") },
         { json: "sessionId", js: "sessionId", typ: "" },
-        { json: "startTimestamp", js: "startTimestamp", typ: 3.14 },
+        { json: "timestamp", js: "timestamp", typ: 3.14 },
         { json: "title", js: "title", typ: u(undefined, "") },
         { json: "url", js: "url", typ: "" },
+        { json: "userAgent", js: "userAgent", typ: "" },
+        { json: "userOrigin", js: "userOrigin", typ: "" },
     ], false),
     "ViewEndRequest": o([
-        { json: "endTimestamp", js: "endTimestamp", typ: 3.14 },
         { json: "id", js: "id", typ: "" },
         { json: "path", js: "path", typ: "" },
         { json: "referrer", js: "referrer", typ: u(undefined, "") },
         { json: "sessionId", js: "sessionId", typ: "" },
-        { json: "startTimestamp", js: "startTimestamp", typ: 3.14 },
         { json: "timeSpent", js: "timeSpent", typ: 3.14 },
+        { json: "timestamp", js: "timestamp", typ: 3.14 },
         { json: "title", js: "title", typ: u(undefined, "") },
         { json: "url", js: "url", typ: "" },
+        { json: "userAgent", js: "userAgent", typ: "" },
+        { json: "userOrigin", js: "userOrigin", typ: "" },
     ], false),
     "ActionRequest": o([
         { json: "id", js: "id", typ: "" },
         { json: "sessionId", js: "sessionId", typ: "" },
         { json: "target", js: "target", typ: u(undefined, "") },
         { json: "timestamp", js: "timestamp", typ: 3.14 },
-        { json: "type", js: "type", typ: r("DataType") },
+        { json: "type", js: "type", typ: r("ActionRequestType") },
+        { json: "userAgent", js: "userAgent", typ: "" },
+        { json: "userOrigin", js: "userOrigin", typ: "" },
     ], false),
-    "SessionAttributesType": [
-        "SYNTHETICS",
-        "USER",
-    ],
     "DataType": [
         "CLICK",
         "FORM_SUBMIT",
+        "SYNTHETICS",
+        "USER",
     ],
     "PostRequestType": [
         "ACTION",
@@ -418,5 +433,13 @@ const typeMap: any = {
         "SESSION_START",
         "VIEW_END",
         "VIEW_START",
+    ],
+    "SessionStartRequestType": [
+        "SYNTHETICS",
+        "USER",
+    ],
+    "ActionRequestType": [
+        "CLICK",
+        "FORM_SUBMIT",
     ],
 };

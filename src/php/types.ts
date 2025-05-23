@@ -1,8 +1,9 @@
 // To parse this data:
 //
-//   import { Convert, PostRequest, UserInfo, SessionStartRequest, SessionEndRequest, ViewStartRequest, ViewEndRequest, ActionRequest } from "./file";
+//   import { Convert, PostRequest, EntityInfo, UserInfo, SessionStartRequest, SessionEndRequest, ViewStartRequest, ViewEndRequest, ActionRequest } from "./file";
 //
 //   const postRequest = Convert.toPostRequest(json);
+//   const entityInfo = Convert.toEntityInfo(json);
 //   const userInfo = Convert.toUserInfo(json);
 //   const sessionStartRequest = Convert.toSessionStartRequest(json);
 //   const sessionEndRequest = Convert.toSessionEndRequest(json);
@@ -19,6 +20,7 @@ export interface PostRequest {
 }
 
 export interface Data {
+    entity:       string;
     fingerprint?: string;
     id:           string;
     isActive?:    boolean;
@@ -52,12 +54,18 @@ export enum PostRequestType {
     ViewStart = "VIEW_START",
 }
 
+export interface EntityInfo {
+    entity: string;
+}
+
 export interface UserInfo {
+    entity:     string;
     userAgent:  string;
     userOrigin: string;
 }
 
 export interface SessionStartRequest {
+    entity:      string;
     fingerprint: string;
     id:          string;
     isActive:    boolean;
@@ -75,6 +83,7 @@ export enum SessionStartRequestType {
 
 export interface SessionEndRequest {
     actionCount: number;
+    entity:      string;
     fingerprint: string;
     id:          string;
     isActive:    boolean;
@@ -88,6 +97,7 @@ export interface SessionEndRequest {
 }
 
 export interface ViewStartRequest {
+    entity:     string;
     id:         string;
     path:       string;
     referrer?:  string;
@@ -100,6 +110,7 @@ export interface ViewStartRequest {
 }
 
 export interface ViewEndRequest {
+    entity:     string;
     id:         string;
     path:       string;
     referrer?:  string;
@@ -113,6 +124,7 @@ export interface ViewEndRequest {
 }
 
 export interface ActionRequest {
+    entity:     string;
     id:         string;
     sessionId:  string;
     target?:    string;
@@ -136,6 +148,14 @@ export class Convert {
 
     public static postRequestToJson(value: PostRequest): string {
         return JSON.stringify(uncast(value, r("PostRequest")), null, 2);
+    }
+
+    public static toEntityInfo(json: string): EntityInfo {
+        return cast(JSON.parse(json), r("EntityInfo"));
+    }
+
+    public static entityInfoToJson(value: EntityInfo): string {
+        return JSON.stringify(uncast(value, r("EntityInfo")), null, 2);
     }
 
     public static toUserInfo(json: string): UserInfo {
@@ -345,6 +365,7 @@ const typeMap: any = {
         { json: "type", js: "type", typ: r("PostRequestType") },
     ], false),
     "Data": o([
+        { json: "entity", js: "entity", typ: "" },
         { json: "fingerprint", js: "fingerprint", typ: u(undefined, "") },
         { json: "id", js: "id", typ: "" },
         { json: "isActive", js: "isActive", typ: u(undefined, true) },
@@ -362,11 +383,16 @@ const typeMap: any = {
         { json: "url", js: "url", typ: u(undefined, "") },
         { json: "target", js: "target", typ: u(undefined, "") },
     ], false),
+    "EntityInfo": o([
+        { json: "entity", js: "entity", typ: "" },
+    ], false),
     "UserInfo": o([
+        { json: "entity", js: "entity", typ: "" },
         { json: "userAgent", js: "userAgent", typ: "" },
         { json: "userOrigin", js: "userOrigin", typ: "" },
     ], false),
     "SessionStartRequest": o([
+        { json: "entity", js: "entity", typ: "" },
         { json: "fingerprint", js: "fingerprint", typ: "" },
         { json: "id", js: "id", typ: "" },
         { json: "isActive", js: "isActive", typ: true },
@@ -378,6 +404,7 @@ const typeMap: any = {
     ], false),
     "SessionEndRequest": o([
         { json: "actionCount", js: "actionCount", typ: 3.14 },
+        { json: "entity", js: "entity", typ: "" },
         { json: "fingerprint", js: "fingerprint", typ: "" },
         { json: "id", js: "id", typ: "" },
         { json: "isActive", js: "isActive", typ: true },
@@ -390,6 +417,7 @@ const typeMap: any = {
         { json: "viewCount", js: "viewCount", typ: 3.14 },
     ], false),
     "ViewStartRequest": o([
+        { json: "entity", js: "entity", typ: "" },
         { json: "id", js: "id", typ: "" },
         { json: "path", js: "path", typ: "" },
         { json: "referrer", js: "referrer", typ: u(undefined, "") },
@@ -401,6 +429,7 @@ const typeMap: any = {
         { json: "userOrigin", js: "userOrigin", typ: "" },
     ], false),
     "ViewEndRequest": o([
+        { json: "entity", js: "entity", typ: "" },
         { json: "id", js: "id", typ: "" },
         { json: "path", js: "path", typ: "" },
         { json: "referrer", js: "referrer", typ: u(undefined, "") },
@@ -413,6 +442,7 @@ const typeMap: any = {
         { json: "userOrigin", js: "userOrigin", typ: "" },
     ], false),
     "ActionRequest": o([
+        { json: "entity", js: "entity", typ: "" },
         { json: "id", js: "id", typ: "" },
         { json: "sessionId", js: "sessionId", typ: "" },
         { json: "target", js: "target", typ: u(undefined, "") },

@@ -6,7 +6,7 @@ const script = document.currentScript as HTMLScriptElement | null;
 const clientToken = getAttributeOrThrow(script, "client-token");
 
 const collector = new LogCollector({
-  endpoint: `http://34.146.163.45`,
+  endpoint: `https://atlas-cloud-dev.com/logs`,
   clientToken,
 });
 

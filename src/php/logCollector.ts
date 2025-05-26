@@ -91,6 +91,7 @@ export class LogCollector {
       type: DataType.User,
       userAgent: "", // Will be filled server-side
       userOrigin: "", // Will be filled server-side
+      entity: "", // Will be filled server-side
     };
 
     this.sendRequest(PostRequestType.SessionStart, data);
@@ -111,6 +112,7 @@ export class LogCollector {
       viewCount: this.viewCount,
       userAgent: "", // Will be filled server-side
       userOrigin: "", // Will be filled server-side
+      entity: "", // Will be filled server-side
     };
 
     this.sendRequest(PostRequestType.SessionEnd, data);
@@ -132,6 +134,7 @@ export class LogCollector {
       referrer: document.referrer || undefined,
       userAgent: "", // Will be filled server-side
       userOrigin: "", // Will be filled server-side
+      entity: "", // Will be filled server-side
     };
 
     this.sendRequest(PostRequestType.ViewStart, data);
@@ -153,6 +156,7 @@ export class LogCollector {
       referrer: document.referrer || undefined,
       userAgent: "", // Will be filled server-side
       userOrigin: "", // Will be filled server-side
+      entity: "", // Will be filled server-side
     };
 
     this.sendRequest(PostRequestType.ViewEnd, data);
@@ -170,6 +174,7 @@ export class LogCollector {
       target: target.id || target.tagName || undefined,
       userAgent: "", // Will be filled server-side
       userOrigin: "", // Will be filled server-side
+      entity: "", // Will be filled server-side
     };
 
     this.sendRequest(PostRequestType.Action, data);
@@ -187,6 +192,7 @@ export class LogCollector {
       target: form.id || form.name || "unnamed_form",
       userAgent: "", // Will be filled server-side
       userOrigin: "", // Will be filled server-side
+      entity: "", // Will be filled server-side
     };
 
     this.sendRequest(PostRequestType.Action, data);

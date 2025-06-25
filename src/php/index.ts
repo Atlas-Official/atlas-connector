@@ -3,10 +3,11 @@ import { getAttributeOrThrow } from "./helpers";
 
 const script = document.currentScript as HTMLScriptElement | null;
 
-const clientToken = getAttributeOrThrow(script, "client-token");
+const clientToken = getAttributeOrThrow(script, "data-client-token");
+const dataDomain = getAttributeOrThrow(script, "data-domain");
 
 const collector = new LogCollector({
-  endpoint: `https://atlas-cloud-dev.com/logs`,
+  endpoint: dataDomain,
   clientToken,
 });
 
